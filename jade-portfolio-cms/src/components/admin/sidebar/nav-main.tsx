@@ -1,8 +1,14 @@
-import { ChevronRight, LucideIcon } from "lucide-react";
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ChevronRight, type LucideIcon } from "lucide-react";
+
 import {
   Collapsible,
-  CollapsibleTrigger,
   CollapsibleContent,
+  CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
@@ -11,125 +17,97 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
-export type NavItem = {
-  label?: string;
-  isSection?: boolean;
-  title?: string;
-  icon?: LucideIcon;
-  href?: string;
-  children?: NavItem[];
-};
+export type NavItem =
+  | { label: string; isSection: true }
+  | { title: string; href: string; icon?: LucideIcon; children?: never }
+  | {
+      title: string;
+      icon?: LucideIcon;
+      children: { title: string; href: string }[];
+      href?: never;
+    };
+
+function isActivePath(pathname: string, href: string) {
+  if (href === "#") return false;
+  return pathname === href || pathname.startsWith(href + "/");
+}
 
 export function NavMain({ items }: { items: NavItem[] }) {
-  // Recursive render function
-  const renderItem = (item: NavItem) => {
-    //  Section label
-    if (item.isSection && item.label) {
-      return (
-        <SidebarGroup key={item.label} className="p-0 pt-5 first:pt-0">
-          <SidebarGroupLabel className="p-0 text-xs font-medium uppercase text-sidebar-foreground">
-            {item.label}
-          </SidebarGroupLabel>
-        </SidebarGroup>
-      );
-    }
+  const pathname = usePathname();
+  
+  return (
+    <SidebarGroup>
+      <SidebarMenu>
+        {items.map((item, idx) => {
+          // 1) 섹션 타이틀
+          if ("isSection" in item && item.isSection) {
+            return (
+              <SidebarGroupLabel key={`${item.label}-${idx}`} className="px-0">
+                {item.label}
+              </SidebarGroupLabel>
+            );
+          }
 
-    const hasChildren = !!item.children?.length;
+          // 2) 아코디언(children)
+          if ("children" in item && item.children?.length) {
+            const defaultOpen = item.children.some((c) =>
+              isActivePath(pathname, c.href)
+            );
+            
+            return (
+              <SidebarMenuItem key={item.title}>
+                <Collapsible defaultOpen={defaultOpen} className="group/collapsible">
+                  <CollapsibleTrigger asChild>
+                    {/* ✅ Trigger는 Link 없이 “버튼”만 */}
+                    <SidebarMenuButton className="cursor-pointer">
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
 
-    // Item with children → collapsible
-    if (hasChildren && item.title) {
-      return (
-        <SidebarGroup key={item.title} className="p-0">
-          <SidebarMenu>
-            <Collapsible>
-              <SidebarMenuItem>
-                <CollapsibleTrigger className="w-full" render={<SidebarMenuButton
-                  tooltip={item.title}
-                  className="rounded-xl text-sm font-medium px-3 py-2 h-9"
-                >
-                  {item.icon && <item.icon size={16} />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 data-[state=open]:rotate-90" />
-                </SidebarMenuButton>} />
-                <CollapsibleContent>
-                  <SidebarMenuSub className="me-0 pe-0">
-                    {item.children!.map(renderItemSub)}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.children.map((child) => (
+                        <SidebarMenuSubItem key={child.title}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={isActivePath(pathname, child.href)}
+                            className="cursor-pointer"
+                          >
+                            <Link href={child.href}>
+                              <span>{child.title}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
               </SidebarMenuItem>
-            </Collapsible>
-          </SidebarMenu>
-        </SidebarGroup>
-      );
-    }
+            );
+          }
 
-    // Item without children
-    if (item.title) {
-      return (
-        <SidebarGroup key={item.title} className="p-0">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                tooltip={item.title}
-                className="rounded-xl text-sm font-medium px-3 py-2 h-9"
-              >
-                {item.icon && <item.icon />}
-                <a href={item.href} className="w-full">
-                  {item.title}
-                </a>
+          // 3) 단일 링크
+          const active = isActivePath(pathname, item.href);
+
+          return (
+            
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild isActive={active} className="cursor-pointer">
+                <Link href={item.href}>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
-      );
-    }
-
-    return null;
-  };
-
-  // Recursive render function for sub-items
-  const renderItemSub = (item: NavItem) => {
-    const hasChildren = !!item.children?.length;
-
-    if (hasChildren && item.title) {
-      return (
-        <SidebarMenuSubItem key={item.title}>
-          <Collapsible>
-            <CollapsibleTrigger className="w-full" render={
-              <SidebarMenuSubButton
-                className="rounded-xl text-sm font-medium px-3 py-2 h-9"
-              >
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
-                <ChevronRight className="ml-auto transition-transform duration-200 data-[state=open]:rotate-90" />
-              </SidebarMenuSubButton>} />
-            <CollapsibleContent>
-              <SidebarMenuSub className="me-0 pe-0">
-                {item.children!.map(renderItemSub)}
-              </SidebarMenuSub>
-            </CollapsibleContent>
-          </Collapsible>
-        </SidebarMenuSubItem>
-      );
-    }
-
-    if (item.title) {
-      return (
-        <SidebarMenuSubItem key={item.title} className="w-full">
-          <SidebarMenuSubButton
-            className="w-full"
-            render={<a href={item.href}>{item.title}</a>}
-          />
-        </SidebarMenuSubItem>
-      );
-    }
-
-    return null;
-  };
-
-  return <>{items.map(renderItem)}</>;
+          );
+        })}
+      </SidebarMenu>
+    </SidebarGroup>
+  );
 }
