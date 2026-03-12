@@ -23,56 +23,55 @@ import {
 } from "lucide-react";
 
 export const navData: NavItem[] = [
-  // Dashboards Section
-  { label: "Dashboards", isSection: true },
-  { title: "Analytics", icon: PieChart, href: "/#" },
-  { title: "CRM Dashboard", icon: ClipboardList, href: "/#" },
-
-  // Pages Section
-  { label: "Pages", isSection: true },
-  { title: "Tables", icon: Table, href: "/#" },
-  { title: "Forms", icon: ClipboardList, href: "/#" },
-  { title: "User Profile", icon: CircleUserRound, href: "/#" },
-
-  // Apps Section
-  { label: "Apps", isSection: true },
-  { title: "Notes", icon: Notebook, href: "/#" },
-  { title: "Tickets", icon: Ticket, href: "/#" },
+  // 오늘 들어온 문의 수 / 공개 프로젝트 수 / Draft 수 / “Public 반영 상태(Last revalidate)” 표시
+  { label: "Dashboard", isSection: true }, 
   {
-    title: "Blogs",
-    icon: Languages,
+    title: "Overview",
+    icon: PieChart,
+    href: "/admin",
+  },
+
+  // 목록(List) / 상세(Detail) / 작성(Create) / 수정(Edit)
+  { label: "Content", isSection: true },
+  {
+    title: "Projects",
+    icon: ClipboardList,
     children: [
-      { title: "Blog Post", href: "/#" },
-      { title: "Blog Detail", href: "/#" },
-      { title: "Blog Edit", href: "/#" },
-      { title: "Blog Create", href: "/#" },
-      { title: "Manage Blogs", href: "/#" },
+      { title: "All Projects", href: "/admin/projects" },
+      { title: "Create Project", href: "/admin/projects/create" },
+    ],
+  },
+  // Contacts (문의함)
+  { 
+    title: "Contacts",
+    icon: Notebook,
+    children: [
+      { title: "Inbox", href: "/admin/contacts" },
+      { title: "Archived", href: "/admin/contacts/archived" },
     ],
   },
 
-  // Form Elements Section
-  { label: "Form Elements", isSection: true },
+  // ================= System =================
+  { label: "System", isSection: true },
   {
-    title: "Shadcn Forms",
-    icon: NotepadText,
+    title: "Settings",
+    icon: CircleUserRound,
     children: [
-      { title: "Button", href: "/#" },
-      { title: "Input", href: "/#" },
-      { title: "Select", href: "/#" },
-      { title: "Checkbox", href: "/#" },
-      { title: "Radio", href: "/#" },
+      { title: "Profile", href: "/admin/settings/profile" },
+      { title: "Site Settings", href: "/admin/settings/site" },
     ],
   },
+  // 상태 기록 로그 누가 언제 무엇을 변경했는지 기록
   {
-    title: "Form layouts",
+    title: "Audit Logs",
+    icon: Table,
+    href: "/admin/logs",
+  },
+  // 권한 분리 (확장가능) / Superbase RLS 연결
+  {
+    title: "Roles",
     icon: AlignStartVertical,
-    children: [
-      { title: "Forms Horizontal", href: "/#" },
-      { title: "Forms Vertical", href: "/#" },
-      { title: "Forms Validation", href: "/#" },
-      { title: "Forms Examples", href: "/#" },
-      { title: "Forms Wizard", href: "/#" },
-    ],
+    href: "/admin/roles",
   },
 ];
 

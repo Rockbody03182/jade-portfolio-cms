@@ -62,7 +62,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
               <SidebarMenuItem key={item.title}>
                 <Collapsible defaultOpen={defaultOpen} className="group/collapsible">
                   <CollapsibleTrigger asChild>
-                    {/* ✅ Trigger는 Link 없이 “버튼”만 */}
+                    {/* Trigger는 Link 없이 “버튼”만 */}
                     <SidebarMenuButton className="cursor-pointer">
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
