@@ -27,10 +27,14 @@ export default async function Page() {
   }
 
   const totalProjects = projects?.length ?? 0;
+  projects?.forEach((project) => {
+    console.log(project.is_published);
+    console.log(project.display_order);
+  });
   const publishedProjects =
-    projects?.filter((project) => project.is_published).length ?? 0;
+    projects?.filter((project) => project.display_order).length ?? 0;
   const featuredProjects =
-    projects?.filter((project) => project.is_featured).length ?? 0;
+    projects?.filter((project) => project.display_order).length ?? 0;
 
   return (
     <div className="space-y-6">
@@ -117,10 +121,10 @@ export default async function Page() {
                     {project.slug}
                   </TableCell>
                   <TableCell>
-                    {project.is_published ? "공개" : "비공개"}
+                    {project.display_order ? "공개" : "비공개"}
                   </TableCell>
                   <TableCell>
-                    {project.is_featured ? "대표" : "-"}
+                    {project.display_order ? "대표" : "-"}
                   </TableCell>
                 </TableRow>
               ))
