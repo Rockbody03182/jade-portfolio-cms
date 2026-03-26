@@ -1,13 +1,4 @@
-import {
-  House,
-  User,
-  List,
-  Briefcase,
-  FolderKanban,
-  MessageCircle,
-} from "lucide-react";
 import Link from "next/link";
-
 type AsideProps = {
   activeSection: string;
   onNavClick: (section: string) => void;
@@ -24,7 +15,7 @@ export default function Aside({
   return (
     <aside className={isAsideOpen ? "aside open" : "aside"}>
       <div className="logo">
-        <Link href="/">JADE</Link>
+        <Link href="/">Jade</Link>
       </div>
 
       <div
@@ -41,7 +32,7 @@ export default function Aside({
             className={activeSection === "home" ? "active" : ""}
             onClick={() => onNavClick("home")}
           >
-          <House className="fa" size={15} /> Home
+          <i className="fa fa-home"></i> Home
           </a>
         </li>
         <li>
@@ -50,14 +41,15 @@ export default function Aside({
             className={activeSection === "about" ? "active" : ""}
             onClick={() => onNavClick("about")}
           >
-            <User className="fa" size={15} /> About
+            <i className="fa fa-user"></i> About
           </a>
         </li>
         <li>
-          <a href="#services"
-            className={activeSection === "services" ? "active" : ""}
+          <a href="#service"
+            className={activeSection === "service" ? "active" : ""}
+            onClick={() => onNavClick("service")}
           >
-            <List className="fa" size={15} /> Service
+            <i className="fa fa-list"></i> Service
           </a>
         </li>
         <li>
@@ -66,14 +58,15 @@ export default function Aside({
             className={activeSection === "portfolio" ? "active" : ""}
             onClick={() => onNavClick("portfolio")}
           >
-            <Briefcase className="fa" size={15} /> Portfolio
+            <i className="fa fa-briefcase"></i> Portfolio
           </a>
         </li>
         <li>
           <a href="#project"
             className={activeSection === "project" ? "active" : ""}
+            onClick={() => onNavClick("project")}
           >
-            <FolderKanban className="fa" size={15} /> Project
+            <i className="fa fa-envelope"></i> Project
           </a>
         </li>
         <li>
@@ -82,7 +75,7 @@ export default function Aside({
             className={activeSection === "contact" ? "active" : ""}
             onClick={() => onNavClick("contact")}
           >
-            <MessageCircle className="fa" size={15} /> Contact
+            <i className="fa fa-comments"></i> Contact
           </a>
         </li>
       </ul>

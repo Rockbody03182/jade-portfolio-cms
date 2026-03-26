@@ -40,10 +40,24 @@ export default function PublicShell() {
         </section>
 
         <section
+          id="service"
+          className={activeSection === "service" ? "section active" : "section"}
+        >
+          Service
+        </section>
+
+        <section
           id="portfolio"
           className={activeSection === "portfolio" ? "section active" : "section"}
         >
           Portfolio
+        </section>
+
+        <section
+          id="project"
+          className={activeSection === "project" ? "section active" : "section"}
+        >
+          Project
         </section>
 
         <section

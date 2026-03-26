@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import {
   Card,
@@ -115,17 +116,19 @@ export default async function Page() {
             {projects && projects.length > 0 ? (
               projects.map((project) => (
                 <TableRow key={project.id}>
-                  <TableCell>{project.id}</TableCell>
-                  <TableCell className="font-medium">{project.title}</TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {project.slug}
-                  </TableCell>
-                  <TableCell>
-                    {project.display_order ? "공개" : "비공개"}
-                  </TableCell>
-                  <TableCell>
-                    {project.display_order ? "대표" : "-"}
-                  </TableCell>
+                  <Link href={`${project.live_url}`} target="_blank" className="contents">
+                    <TableCell>{project.id}</TableCell>
+                    <TableCell className="font-medium">{project.title}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {project.slug}
+                    </TableCell>
+                    <TableCell>
+                      {project.display_order ? "공개" : "비공개"}
+                    </TableCell>
+                    <TableCell>
+                      {project.display_order ? "대표" : "-"}
+                    </TableCell>             
+                  </Link>
                 </TableRow>
               ))
             ) : (
